@@ -8,38 +8,51 @@
     <title>vue-hello-world</title>
   </head>
   <body>
-  <script language="javascript">
-    var xhr = new XMLHttpRequest();
-    console.log('text');
-    xhr.open('GET', 'https://timetreeapis.com/calendars/JuVYCgDXj8GE/upcoming_events?timezone=Asia/Tokyo&days=3', true);
-    xhr.setRequestHeader('Accept', 'application/vnd.timetree.v1+json');
-    xhr.setRequestHeader('Authorization', 'Bearer ZruUA-PdzbMrjT8jGNi4qNPE5yK1svGELVUUIoL1bktJxWTd');
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4) {
-            if (xhr.status == 200) {
-                var data = JSON.parse(xhr.responseText);
-                var http = new XMLHttpRequest();
-                var url = 'https://notify-api.line.me/api/notify';
-                var params = `message=${xhr.responseText}`;
-                http.open('POST', url, true);
+  <script>
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyy = today.getFullYear();
 
-                //Send the proper header information along with the request
-                http.setRequestHeader('Authorization', 'Bearer XKRV9un7zmsIFq2693U3wttovzTYSWTLDtiZszmiQLq');
+  today = yyyy+ '-' + mm + '-' + dd;
+  var msg = "今天日期:"+today +"\n";
+  var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'https://timetreeapis.com/calendars/JuVYCgDXj8GE/upcoming_events?timezone=Asia/Tokyo&days=3', true);
+      xhr.setRequestHeader('Accept', 'application/vnd.timetree.v1+json');
+      xhr.setRequestHeader('Authorization', 'Bearer ZruUA-PdzbMrjT8jGNi4qNPE5yK1svGELVUUIoL1bktJxWTd');
+      xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4) {
+              if (xhr.status == 200) {
+                  var data = JSON.parse(xhr.responseText);
 
-                http.onreadystatechange = function() {//Call a function when the state changes.
-                    if(http.readyState == 4 && http.status == 200) {
-                        alert("Success!");
+                  data['data'].forEach(function(item){
+                    msg+='事件:'+item['attributes']['title']+'\n';
+                    msg+='時間:'+item['attributes']['start_at']+'\n';
+                    msg+='================================'+'\n';
+                  });
+                  
+                  var http = new XMLHttpRequest();
+                  http.withCredentials = true;
+
+                  http.addEventListener("readystatechange", function() {
+                    if(this.readyState === 4) {
+                      console.log(this.responseText);
                     }
-                }
-                http.send(params);
-                // do something with data
-            } else {
-                //handle errors
-            }
-        }
-    };
-    xhr.send();
-  </script>
+                  });
+
+                  http.open("POST", `https://notify-api.line.me/api/notify?message=%22${msg}%22`);
+                  http.setRequestHeader("Authorization", "Bearer XKRV9un7zmsIFq2693U3wttovzTYSWTLDtiZszmiQLq");
+
+                  http.send();
+                  
+                  // do something with data
+              } else {
+                  //handle errors
+              }
+          }
+      };
+      xhr.send(); 
+    </script>
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
