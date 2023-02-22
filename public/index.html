@@ -9,9 +9,36 @@
   </head>
   <body>
   <script language="javascript">
-    alert('測試文字');
-    alert('測試文字第一行<br>測試文字第二行');
-    alert('測試文字第一行\n測試文字第二行');
+    var xhr = new XMLHttpRequest();
+    console.log('text');
+    xhr.open('GET', 'https://timetreeapis.com/calendars/JuVYCgDXj8GE/upcoming_events?timezone=Asia/Tokyo&days=3', true);
+    xhr.setRequestHeader('Accept', 'application/vnd.timetree.v1+json');
+    xhr.setRequestHeader('Authorization', 'Bearer ZruUA-PdzbMrjT8jGNi4qNPE5yK1svGELVUUIoL1bktJxWTd');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+                var data = JSON.parse(xhr.responseText);
+                var http = new XMLHttpRequest();
+                var url = 'https://notify-api.line.me/api/notify';
+                var params = `message=${xhr.responseText}`;
+                http.open('POST', url, true);
+
+                //Send the proper header information along with the request
+                http.setRequestHeader('Authorization', 'Bearer XKRV9un7zmsIFq2693U3wttovzTYSWTLDtiZszmiQLq');
+
+                http.onreadystatechange = function() {//Call a function when the state changes.
+                    if(http.readyState == 4 && http.status == 200) {
+                        alert("Success!");
+                    }
+                }
+                http.send(params);
+                // do something with data
+            } else {
+                //handle errors
+            }
+        }
+    };
+    xhr.send();
   </script>
     <div id="app"></div>
     <!-- built files will be auto injected -->
