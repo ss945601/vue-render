@@ -38,11 +38,9 @@
                     }
                   });
                   
-                  http.open("POST", `https://notify-api.line.me/api/notify`);
-                  http.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
-                  http.setRequestHeader('Access-Control-Allow-Origin', '*');
-                  http.setRequestHeader("Authorization", "Bearer XKRV9un7zmsIFq2693U3wttovzTYSWTLDtiZszmiQLq");
-                  http.send(`message=${msg}`);
+                  http.open("POST", 'https://fastapi-s3jb.onrender.com/line');
+                  http.setRequestHeader('accept', 'application/json');
+                  http.send(`msg=${msg}`);
 
                   // do something with data
               } else {
