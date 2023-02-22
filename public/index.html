@@ -31,20 +31,7 @@
                     msg+='================================'+'\n';
                   });
                   
-                  var http = new XMLHttpRequest();
-                  http.withCredentials = true;
 
-                  http.addEventListener("readystatechange", function() {
-                    if(this.readyState === 4) {
-                      console.log(this.responseText);
-                    }
-                  });
-
-                  http.open("POST", `https://notify-api.line.me/api/notify?message=%22${msg}%22`);
-                  http.setRequestHeader("Authorization", "Bearer XKRV9un7zmsIFq2693U3wttovzTYSWTLDtiZszmiQLq");
-
-                  http.send();
-                  
                   // do something with data
               } else {
                   //handle errors
